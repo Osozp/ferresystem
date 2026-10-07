@@ -1,4 +1,4 @@
-<x-layouts::admin>
+<x-layouts::app>
 
     <section class="relative bg-white shadow-md rounded-lg mb-5">
         <div class="items-center justify-between p-4 flex space-y-0 space-x-4">
@@ -144,7 +144,7 @@
 
 
 
-          
+
 
             <nav class="mt-2 flex items-center justify-center sm:mt-8" aria-label="Page navigation example">
                 <ul class="flex h-8 items-center -space-x-px text-sm">
@@ -194,4 +194,4 @@
             </nav>
         </div>
     </section>
-</x-layouts::admin>
+</x-layouts::app>

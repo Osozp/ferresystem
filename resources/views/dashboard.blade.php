@@ -1,3 +1,3 @@
-<x-layouts::admin>
+<x-layouts::app>
     hola admin
-</x-layouts::admin>
+</x-layouts::app>

@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained();
             $table->string('codigo');
             $table->string('description');
-            $table->integer('stock');
+            $table->integer('stock')->default(0);
             $table->decimal('price', 10, 2)->default(0.00);
             $table->timestamps();
 
-            $table->unique('commerce_id' , 'codigo');
+            $table->unique(['commerce_id', 'codigo']);
         });
     }
 

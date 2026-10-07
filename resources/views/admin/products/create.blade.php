@@ -1,4 +1,4 @@
-<x-layouts::admin>
+<x-layouts::app title="Productos" :breadcrumbs="['admin.products.index' => 'Productos']">
 
     <section class="relative bg-white shadow-md rounded-lg mb-5">
         <div class="items-center justify-between p-4 flex space-y-0 space-x-4">
@@ -42,7 +42,7 @@
                 <div class="sm:col-span-2">
                     <label for="region" class="block text-sm/6 font-medium text-gray-900">Descripcion</label>
                     <div class="mt-2">
-                        <input name="description" 
+                        <input name="description"
                             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                     </div>
                 </div>
@@ -65,7 +65,4 @@
         </form>
     </section>
 
-
-
-
-</x-layouts::admin>
+</x-layouts::app>

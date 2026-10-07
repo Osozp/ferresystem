@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('products')->get();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -75,6 +75,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->products()->exists()){
+            return redirect()->back()->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
+        }
         $category->delete();
 
         return redirect()->route('admin.categories.index');
