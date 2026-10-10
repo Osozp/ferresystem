@@ -24,6 +24,8 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+
                         <div class="sm:col-span-2">
                             <flux:input label="Descripcion" name="description" placeholder="Descripcion del producto"
                                 value="{{ $product->description }}" />

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -39,7 +40,7 @@ class SaleController extends Controller
             DB::transaction(function () use ($request) {
                 // 1. Crear la Venta
                 $sale = Sale::create([
-                    'user_id'   => auth()->id(),
+                    'user_id'   => Auth::id(),
                     'total'     => $request->total,
                     'sale_date' => $request->sale_date ?? now(),
                 ]);
@@ -79,7 +80,7 @@ class SaleController extends Controller
                 ->with('success', '¡La compra ha sido registrada con éxito!');
         } catch (Exception $e) {
             // Guardar el error detallado en el log de Laravel
-            Log::error('Error al registrar venta: ' . $e->getMessage());
+            //Log::error('Error al registrar venta: ' , $e->getMessage());
 
             return redirect()->back()
                 ->withInput()

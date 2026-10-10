@@ -5,13 +5,16 @@ import "sweetalert2/dist/sweetalert2.min.css";
 window.Swal = Swal;
 
 document.querySelectorAll(".delete-form").forEach((form) => {
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
+    if (!form.dataset.initialized) {
+        form.dataset.initialized = "true";
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
 
-        if (confirm("Estas Seguro que deseas eliminar")) {
-            form.submit();
-        }
-    });
+            if (confirm("Estas Seguro que deseas eliminar")) {
+                form.submit();
+            }
+        });
+    }
 });
 
 if (document.getElementById("register-form")) {

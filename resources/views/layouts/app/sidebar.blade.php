@@ -42,11 +42,18 @@
             'route' => route('admin.sales.index'),
             'active' => request()->routeIs('admin.sales.*'),
         ],
+        [
+            'icon' => 'paper-airplane',
+            'label' => __('Registro de caja'),
+            'route' => route('admin.cash.index'),
+            'active' => request()->routeIs('admin.cash.*'),
+        ],
     ];
 @endphp
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
-    <flux:sidebar sticky collapsible="mobile"
+    {{-- <flux:sidebar sticky collapsible="mobile" --}}
+    <flux:sidebar sticky collapsible
         class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.header>
             <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
@@ -134,6 +141,8 @@
     @endpersist
 
     @fluxScripts
+
+    @stack('scripts')
 </body>
 
 </html>

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('commerce_id')->constrained()->cascadeOnDelete(); // Aislamiento multi-tenant
             $table->foreignId('user_id')->constrained(); // Vendedor (foreign key real)
+            $table->foreignId('cash_register_id')->nullable()->constrained('cash_registers')->nullOnDelete();
             $table->decimal('total', 10, 2)->default(0.00); // Cambio de string a decimal para cálculos
             $table->date('sale_date');
             $table->timestamps();

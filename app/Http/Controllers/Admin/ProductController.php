@@ -69,11 +69,12 @@ class ProductController extends Controller
             'category_id' => 'required',
             'codigo' => 'required|string',
             'description' => 'required|string',
-            'stock' => 'required|integer'
+            'stock' => 'required|integer',
+            'price' => 'required'
         ]);
 
        $product->update($data);
-       
+
         return redirect()->route('admin.products.index');
     }
 
