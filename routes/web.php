@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Socialite;
 
+
 Route::view('/', 'home')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -85,6 +86,12 @@ Route::get('/auth/google/callback', function () {
                 'email_verified_at' => now(),
             ]);
         });
+    }
+
+    if (!$user->is_active) {
+        return redirect()->route('login')->withErrors([
+            'email' => 'Tu cuenta ha sido suspendida temporalmente por el administrador.'
+        ]);
     }
 
     Auth::login($user);

@@ -1,15 +1,34 @@
 <x-layouts::app title="Productos" :breadcrumbs="['admin.products.index' => 'Productos']">
+    <flux:card>
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-    <section class="relative bg-white shadow-md rounded-lg mb-5">
-        <div class="items-center justify-between p-4 flex space-y-0 space-x-4">
-            <div>
-                <h5 class="mr-3 font-semibold">Crear nuevo producto</h5>
-                <p class="text-gray-500">Lista de productos</p>
-            </div>
-        </div>
-    </section>
+            <flux:fieldset>
+                <flux:legend>Crear nuevo producto</flux:legend>
 
-    <section class="relative bg-white shadow-md rounded-lg mb-5 p-4">
+                <div class="space-y-6">
+                    <flux:select label="Selecciona la categoria" placeholder="Selecciona la categoria" name="category_id">
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id', $selectedCategoryId) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </flux:select>
+
+                    <flux:input label="Nombre del producto" name="description" placeholder="producto" autofocus />
+
+                    <div class="flex justify-end">
+                        <flux:button type="submit" variant="primary">Guardar Producto</flux:button>
+                    </div>
+                </div>
+            </flux:fieldset>
+
+        </form>
+    </flux:card>
+
+
+    {{-- <section class="relative bg-white shadow-md rounded-lg mb-5 p-4">
         <form action="{{ route('admin.products.store') }}" method="POST">
             @csrf
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -63,6 +82,6 @@
                     class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
             </div>
         </form>
-    </section>
+    </section> --}}
 
 </x-layouts::app>

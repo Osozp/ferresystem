@@ -12,7 +12,14 @@ document.addEventListener("click", (e) => {
         const description = button.dataset.description;
 
         button.disabled = true;
-        button.classList.add("opacity-50", "cursor-not-allowed", "border", "border-gray-300", "!bg-transparent", "text-gray-400" );
+        button.classList.add(
+            "opacity-50",
+            "cursor-not-allowed",
+            "border",
+            "border-gray-300",
+            "!bg-transparent",
+            "text-gray-400",
+        );
         button.textContent = "Agregado";
 
         addItem(id, code, description);
@@ -59,7 +66,10 @@ if (detailsContainer) {
                 originalButton.classList.remove(
                     "opacity-50",
                     "cursor-not-allowed",
-                    "border", "border-gray-300", "!bg-transparent","text-gray-400"
+                    "border",
+                    "border-gray-300",
+                    "!bg-transparent",
+                    "text-gray-400",
                 );
                 originalButton.textContent = "Agregar";
             }
@@ -166,8 +176,7 @@ function renderDetails() {
         //                     </div>
         //                 </div>`;
 
-
-         row.innerHTML = `
+        row.innerHTML = `
                 <div class="item-row grid grid-cols-5 items-end gap-3 py-3">
 
                     <div class="flex-1">
@@ -248,7 +257,6 @@ function renderDetails() {
 
                 </div>
             `;
-
 
         // row.innerHTML = `
         //         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white border border-gray-200 rounded-lg shadow-xs hover:border-gray-300 transition-colors">
@@ -462,73 +470,87 @@ window.showToast = (icon, title) => {
     Toast.fire({ icon, title });
 };
 
+document.addEventListener("DOMContentLoaded", () => {
+    initComprasModal();
+});
+
+// Esto se ejecuta cada vez que Livewire navega entre vistas o actualiza componentes
+document.addEventListener("livewire:navigated", () => {
+    initComprasModal();
+});
+
 // Lógica para el Modal de Detalle de Compra
-const modal = document.getElementById("purchase-detail-modal");
-const closeModalBtn = document.getElementById("close-modal-btn");
+function initComprasModal() {
+    const modal = document.getElementById("purchase-detail-modal");
+    const closeModalBtn = document.getElementById("close-modal-btn");
 
-if (modal) {
-    // Abrir modal y consultar API
-    document.addEventListener("click", async (e) => {
-        const btn = e.target?.closest(".btn-show-purchase");
-        if (!btn) return;
+    if (modal) {
+        // Abrir modal y consultar API
+        document.addEventListener("click", async (e) => {
+            const btn = e.target?.closest(".btn-show-purchase");
+            if (!btn) return;
+            const purchaseId = btn.dataset.id;
 
-        const purchaseId = btn.dataset.id;
+            try {
+                const response = await fetch(`/admin/purchases/${purchaseId}`);
+                if (!response.ok)
+                    throw new Error("Error al obtener el detalle");
 
-        try {
-            const response = await fetch(`/admin/purchases/${purchaseId}`);
-            if (!response.ok) throw new Error("Error al obtener el detalle");
+                const purchase = await response.json();
 
-            const purchase = await response.json();
+                // Llenar información general del modal
+                document.getElementById("modal-purchase-id").textContent =
+                    purchase.id;
+                document.getElementById("modal-purchase-date").textContent =
+                    new Date(purchase.purchase_date).toLocaleDateString();
+                document.getElementById("modal-purchase-total").textContent =
+                    Number.parseFloat(purchase.total).toFixed(2);
 
-            // Llenar información general del modal
-            document.getElementById("modal-purchase-id").textContent =
-                purchase.id;
-            document.getElementById("modal-purchase-date").textContent =
-                new Date(purchase.purchase_date).toLocaleDateString();
-            document.getElementById("modal-purchase-total").textContent =
-                Number.parseFloat(purchase.total).toFixed(2);
+                // Renderizar la tabla de productos dentro del modal
+                const itemsBody = document.getElementById("modal-items-body");
+                itemsBody.innerHTML = "";
 
-            // Renderizar la tabla de productos dentro del modal
-            const itemsBody = document.getElementById("modal-items-body");
-            itemsBody.innerHTML = "";
+                purchase.products.forEach((product) => {
+                    const quantity = product.pivot.quantity;
+                    const price = Number.parseFloat(product.pivot.price);
+                    const subtotal = (quantity * price).toFixed(2);
 
-            purchase.products.forEach((product) => {
-                const quantity = product.pivot.quantity;
-                const price = Number.parseFloat(product.pivot.price);
-                const subtotal = (quantity * price).toFixed(2);
-
-                const row = `
+                    const row = `
                     <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">${product.codigo}</td>
-                        <td class="px-4 py-3">${product.description}</td>
+
+                        <td class="px-4 py-3">${product.description ?? "-"}</td>
                         <td class="px-4 py-3 text-center">${quantity}</td>
                         <td class="px-4 py-3 text-right">${price.toFixed(2)} Bs.</td>
-                        <td class="px-4 py-3 text-right font-semibold text-gray-900">${subtotal} Bs.</td>
+                        <td class="px-4 py-3 text-right font-semibold">${subtotal} Bs.</td>
                     </tr>
                 `;
-                itemsBody.insertAdjacentHTML("beforeend", row);
-            });
+                    itemsBody.insertAdjacentHTML("beforeend", row);
+                });
 
-            modal.classList.remove("hidden");
-        } catch (error) {
-            console.error(error);
-            if (typeof window.showToast === "function") {
-                window.showToast(
-                    "error",
-                    "No se pudo cargar el detalle de la compra.",
-                );
+                modal.classList.remove("hidden");
+            } catch (error) {
+                console.error(error);
+                if (typeof window.showToast === "function") {
+                    window.showToast(
+                        "error",
+                        "No se pudo cargar el detalle de la compra.",
+                    );
+                }
             }
+        });
+
+        // Cerrar modal
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener("click", () =>
+                modal.classList.add("hidden"),
+            );
         }
-    });
 
-    // Cerrar modal
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener("click", () =>
-            modal.classList.add("hidden"),
-        );
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) modal.classList.add("hidden");
+        });
     }
-
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.add("hidden");
-    });
 }
+
+
+

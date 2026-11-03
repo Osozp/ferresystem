@@ -1,4 +1,4 @@
-<x-layouts::app>
+<x-layouts::app title="Compras" :breadcrumbs="['admin.purchases.index' => 'Compras']">
     <section class="grid grid-cols-2 gap-4">
         <div class="rounded-lg">
             <flux:card class="!px-3">

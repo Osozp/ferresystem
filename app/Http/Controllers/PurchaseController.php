@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CashRegister;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -53,9 +55,14 @@ class PurchaseController extends Controller
             // 2. Transacción
             DB::transaction(function () use ($request) {
 
+            $activeRegister = CashRegister::where('user_id', Auth::id())
+                ->where('status','open')
+                ->first();
+
                 // Paso A: Crear cabecera
                 $purchase = Purchase::create([
                     'purchase_date' => $request->purchase_date,
+                    'cash_register_id' => $activeRegister?->id,
                     'total'         => $request->total,
                     'status'        => 'completed', // Estado inicial sugerido
                 ]);

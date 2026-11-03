@@ -51,8 +51,8 @@
     ];
 @endphp
 
+
 <body class="min-h-screen bg-white dark:bg-zinc-800">
-    {{-- <flux:sidebar sticky collapsible="mobile" --}}
     <flux:sidebar sticky collapsible
         class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.header>
@@ -64,7 +64,8 @@
             <flux:sidebar.group :heading="__('Platform')" class="grid">
                 @foreach ($navItems as $item)
                     <flux:sidebar.item icon="{{ $item['icon'] }}" :href="$item['route']" :current="$item['active']"
-                        wire:navigate>
+                        {{-- wire:navigate --}}
+                        >
                         {{ $item['label'] }}
                     </flux:sidebar.item>
                 @endforeach

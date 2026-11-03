@@ -1,4 +1,4 @@
-<x-layouts::app>
+<x-layouts::app title="Compras" :breadcrumbs="['admin.purchases.index' => 'Compras']">
     <flux:card>
         <div class="flex items-center justify-between gap-4">
             <div>
@@ -51,13 +51,13 @@
 
                         <flux:table.cell>
                             <flux:button.group>
-                                <flux:button icon="cursor-arrow-rays" variant="primary" color="blue" class="btn-show-purchase"
-                                    data-id="{{ $purchase->id }}">
+                                <flux:button icon="cursor-arrow-rays" variant="primary" color="blue"
+                                    class="btn-show-purchase" data-id="{{ $purchase->id }}">
                                     Ver
                                 </flux:button>
                                 @if ($purchase->status !== 'canceled')
-                                    <flux:button icon="trash" variant="primary" color="red" class="btn-cancel-purchase"
-                                        data-id="{{ $purchase->id }}">
+                                    <flux:button icon="trash" variant="primary" color="red"
+                                        class="btn-cancel-purchase" data-id="{{ $purchase->id }}">
                                         Ver
                                     </flux:button>
                                 @endif
@@ -87,6 +87,66 @@
 
     <!-- MODAL DE DETALLE DE COMPRA -->
     <div id="purchase-detail-modal"
+        class="fixed inset-0 z-50 hidden bg-zinc-900/60 backdrop-blur-sm flex items-start justify-center p-4">
+        <div
+            class="bg-white dark:bg-white/10 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh] border border-transparent dark:border-zinc-800 transition-colors">
+
+            <!-- Encabezado del Modal -->
+            <div class="px-6 py-4 bg-emerald-600 dark:bg-emerald-700 text-white flex items-center justify-between">
+                <h3 class="text-lg font-bold tracking-wide">
+                    Detalle de Compra #<span id="modal-purchase-id"></span>
+                </h3>
+                <button id="close-modal-btn" type="button"
+                    class="text-white/80 hover:text-white hover:bg-emerald-700 dark:hover:bg-emerald-800 p-1.5 rounded-lg transition-colors focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Cuerpo del Modal -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-5">
+                <!-- Datos Generales -->
+                <div
+                    class="flex justify-between items-center text-sm text-zinc-600 dark:text-zinc-400 border-b border-zinc-100 dark:border-zinc-800 pb-4">
+                    <p>
+                        <strong class="font-semibold text-zinc-800 dark:text-zinc-200">Fecha de compra:</strong>
+                        <span id="modal-purchase-date"></span>
+                    </p>
+                    <p>
+                        <strong class="font-semibold text-zinc-800 dark:text-zinc-200">Total general:</strong>
+                        <span id="modal-purchase-total"
+                            class="font-bold text-emerald-600 dark:text-emerald-400 text-base"></span> Bs.
+                    </p>
+                </div>
+
+                <!-- Tabla de Productos -->
+                <div class="overflow-x-auto rounded-xl border border-zinc-100 dark:border-zinc-800">
+                    <table class="w-full text-sm text-left">
+                        <thead
+                            class="text-xs uppercase bg-zinc-100 dark:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 font-semibold tracking-wider">
+                            <tr>
+
+                                <th class="px-4 py-3">Descripción</th>
+                                <th class="px-4 py-3 text-center">Cantidad</th>
+                                <th class="px-4 py-3 text-right">P. Unitario</th>
+                                <th class="px-4 py-3 text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-items-body"
+                            class="divide-y divide-zinc-100 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+                            <!-- Filas cargadas dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALLE DE COMPRA -->
+    {{-- <div id="purchase-detail-modal"
         class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-start justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
             <!-- Encabezado del Modal -->
@@ -125,10 +185,24 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
+
+    @if (session('success'))
+        <div class="my-4 flex items-center rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
+            role="alert">
+            <svg class="me-3 inline h-4 w-4 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+            </svg>
+            <div>
+                <span class="font-medium">¡Éxito!</span> {{ session('success') }}
+            </div>
+        </div>
+    @endif
 
     @push('scripts')
         @vite(['resources/js/modules/compras.js'])
     @endpush
-    
+
 </x-layouts::app>

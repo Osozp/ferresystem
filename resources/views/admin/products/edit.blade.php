@@ -8,37 +8,42 @@
                 <div class="space-y-6">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div class="sm:col-span-3">
-                            <flux:select label="Categoria" name="category_id" value="{{ $product->category_id }}">
+                            <flux:select label="Categoria" name="category_id">
                                 <flux:select.option value="" disabled>Seleccione una categoria</flux:select.option>
                                 @foreach ($categories as $category)
-                                    <flux:select.option value="{{ $category->id }}">
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
-                                    </flux:select.option>
+                                    </option>
                                 @endforeach
                             </flux:select>
                         </div>
-                        <div class="sm:col-span-3">
+                        {{-- <div class="sm:col-span-3">
                             <flux:input label="Codigo" name="codigo" placeholder="Codigo del producto"
                                 value="{{ $product->codigo }}" />
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-3">
                             <flux:input label="Descripcion" name="description" placeholder="Descripcion del producto"
                                 value="{{ $product->description }}" />
                         </div>
 
                         <div class="sm:col-span-2">
                             <flux:input label="Stock" name="stock" placeholder="Stock del producto"
-                                value="{{ $product->stock }}" />
+                                value="{{ $product->stock }}" readonly />
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-1">
                             <flux:input label="Precio de venta" name="price"
-                                placeholder="Precio de venta del producto" value="{{ $product->price }}" />
+                                placeholder="Precio de venta del producto" value="{{ $product->price }}">
+                                <x-slot name="iconTrailing">
+                                    Bs
+                                </x-slot>
+                            </flux:input>
                         </div>
                     </div>
 

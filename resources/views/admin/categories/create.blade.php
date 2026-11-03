@@ -5,7 +5,7 @@
         <flux:fieldset>
             <flux:legend>Creacion de nueva Categoria</flux:legend>
             <div class="space-y-6">
-                <flux:input label="Nombre de la categoria" name="name" placeholder="Nombre de la nueva categoria" />
+                <flux:input label="Nombre de la categoria" name="name" placeholder="Nombre de la nueva categoria" autofocus/>
 
                 <div class="flex justify-end">
                     <flux:button type="submit" variant="primary">Guardar Categoria</flux:button>

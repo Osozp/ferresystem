@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CashRegister;
 use App\Models\Sale;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -38,9 +39,15 @@ class SaleController extends Controller
 
         try {
             DB::transaction(function () use ($request) {
+
+                $activeRegister = CashRegister::where('user_id', Auth::id())
+                    ->where('status','open')
+                    ->first();
+
                 // 1. Crear la Venta
                 $sale = Sale::create([
                     'user_id'   => Auth::id(),
+                    'cash_register_id' => $activeRegister?->id,
                     'total'     => $request->total,
                     'sale_date' => $request->sale_date ?? now(),
                 ]);

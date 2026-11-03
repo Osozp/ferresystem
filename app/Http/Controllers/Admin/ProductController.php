@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -14,17 +15,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        $selectedCategoryId = $request->query('category_id');
+        return view('admin.products.create', compact('categories', 'selectedCategoryId'));
     }
 
     /**
@@ -34,13 +36,15 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'category_id' => 'required',
-            'codigo' => 'required|string',
             'description' => 'required|string',
-            'stock' => 'required|integer'
+            'stock' => 'integer'
         ]);
 
+        $data['description'] = Str::ucfirst($data['description']);
+
         Product::create($data);
-        return redirect()->route('admin.products.index');
+        return redirect()->route('admin.categories.show', $data['category_id'])
+                        ->with('success', 'Producto creado exitosamente.');
     }
 
     /**
@@ -65,15 +69,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-         $data = $request->validate([
+        $data = $request->validate([
             'category_id' => 'required',
-            'codigo' => 'required|string',
             'description' => 'required|string',
-            'stock' => 'required|integer',
+            'stock' => 'integer',
             'price' => 'required'
         ]);
 
-       $product->update($data);
+        $data['description'] = Str::ucfirst($data['description']);
+
+        $product->update($data);
 
         return redirect()->route('admin.products.index');
     }

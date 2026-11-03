@@ -23,6 +23,10 @@ class Commerce extends Model
         'subscription_ends_at' => 'datetime',
     ];
 
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
     /**
      * Evalúa si el comercio tiene acceso permitido al sistema.
      */
@@ -39,5 +43,10 @@ class Commerce extends Model
         }
 
         return false;
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(CommercePayment::class);
     }
 }

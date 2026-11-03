@@ -1,4 +1,4 @@
-<x-layouts::app>
+<x-layouts::app title="Ventas" :breadcrumbs="['admin.sales.index' => 'Ventas']">
     <flux:card>
 
     </flux:card>
