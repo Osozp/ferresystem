@@ -81,7 +81,8 @@
 
                 <flux:table bleed container:class="mt-6">
                     <flux:table.columns>
-                        <flux:table.column>Codigo</flux:table.column>
+                        <flux:table.column>#</flux:table.column>
+                        {{-- <flux:table.column>Codigo</flux:table.column> --}}
                         <flux:table.column>Descripcion</flux:table.column>
                         <flux:table.column>Precio</flux:table.column>
                         <flux:table.column>Stock</flux:table.column>
@@ -91,9 +92,12 @@
                     <flux:table.rows>
                         @foreach ($products as $product)
                             <flux:table.row :key="$product->id">
-                                <flux:table.cell>
-                                    {{ $product->codigo }}
+                                <flux:table.cell variant="strong">
+                                    {{ $product->id }}
                                 </flux:table.cell>
+                                {{-- <flux:table.cell>
+                                    {{ $product->codigo }}
+                                </flux:table.cell> --}}
 
                                 <flux:table.cell>
                                     {{ $product->description }}
@@ -109,22 +113,24 @@
 
                                 <flux:table.cell>
                                     @if ($product->stock <= 0)
-                                        <flux:button variant="primary" color="red" disabled>Agotado</flux:table.cell>
-                                    @else
-                                        <flux:button variant="primary" color="green" class="btn-add-product"
-                                            data-id="{{ $product->id }}"
-                                            data-code="{{ $product->codigo }}"
-                                            data-description="{{ $product->description }}"
-                                            data-stock="{{ $product->stock }}"
-                                            data-price="{{ $product->price }}">
-                                            Agregar
-                                        </flux:table.cell>
-                                    @endif
+                                        <flux:button variant="primary" color="red" disabled>Agotado
                                 </flux:table.cell>
-                            </flux:table.row>
+                            @else
+                                <flux:button variant="primary" color="green" class="btn-add-product"
+                                    data-id="{{ $product->id }}" data-code="{{ $product->codigo }}"
+                                    data-description="{{ $product->description }}" data-stock="{{ $product->stock }}"
+                                    data-price="{{ $product->price }}">
+                                    Agregar
+                                    </flux:table.cell>
+                        @endif
+                        </flux:table.cell>
+                        </flux:table.row>
                         @endforeach
                     </flux:table.rows>
                 </flux:table>
+                <div class="mt-4 text-white">
+                    {{ $products->links() }}
+                </div>
             </flux:card>
         </div>
     </section>

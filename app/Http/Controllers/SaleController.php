@@ -26,13 +26,13 @@ class SaleController extends Controller
             ->latest()
             ->get()
             : collect();
-            
+
         return view('admin.sales.index', compact('products', 'sales'));
     }
 
     public function create()
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
         return view('admin.sales.create', compact('products'));
     }
 

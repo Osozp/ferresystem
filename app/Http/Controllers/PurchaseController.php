@@ -31,7 +31,7 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
         return view('admin.purchases.create', compact('products'));
     }
 

@@ -83,7 +83,7 @@
                 <flux:table bleed container:class="mt-6">
                     <flux:table.columns>
                         <flux:table.column>#</flux:table.column>
-                        <flux:table.column>Codigo</flux:table.column>
+                        {{-- <flux:table.column>Codigo</flux:table.column> --}}
                         <flux:table.column>Descripcion</flux:table.column>
                         <flux:table.column>Precio</flux:table.column>
                         <flux:table.column>Stock</flux:table.column>
@@ -97,9 +97,9 @@
                                     {{ $product->id }}
                                 </flux:table.cell>
 
-                                <flux:table.cell>
+                                {{-- <flux:table.cell>
                                     {{ $product->codigo }}
-                                </flux:table.cell>
+                                </flux:table.cell> --}}
 
                                 <flux:table.cell>
                                     {{ $product->description }}
@@ -122,11 +122,14 @@
                         @endforeach
                     </flux:table.rows>
                 </flux:table>
+                <div class="mt-4 text-white">
+                    {{ $products->links() }}
+                </div>
             </flux:card>
         </div>
     </section>
 
-   @push('scripts')
+    @push('scripts')
         @vite(['resources/js/modules/compras.js'])
     @endpush
 
