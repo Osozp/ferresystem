@@ -1,4 +1,5 @@
-<x-layouts::app>
+<x-layouts::app title="Categorias" :breadcrumbs="['admin.categories.index' => 'Categorias']">
+
     <flux:card>
         <div class="flex items-center justify-between gap-4">
             <div>
@@ -6,7 +7,8 @@
                 <flux:text class="mt-1">Tu actividad más reciente en categorias</flux:text>
             </div>
 
-            <flux:button href="{{ route('admin.categories.create') }}" variant="primary" size="sm" icon="plus">Crear
+            <flux:button href="{{ route('admin.categories.create') }}" variant="primary" size="sm" icon="plus">
+                Crear
                 Categoría
             </flux:button>
         </div>
@@ -60,8 +62,8 @@
     @if (session('success'))
         <div class="my-4 flex items-center rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
             role="alert">
-            <svg class="me-3 inline h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor" viewBox="0 0 20 20">
+            <svg class="me-3 inline h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
                 <path
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
             </svg>

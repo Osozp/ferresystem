@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\CommerceController as SuperAdminCommerceController;
 use App\Http\Middleware\EnsureIsOwner;
 use App\Http\Middleware\EnsureIsSuperAdmin;
+use App\Models\CashRegister;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth', EnsureCommerceIsActive::class])->group(function () {
@@ -18,7 +19,15 @@ Route::middleware(['auth', EnsureCommerceIsActive::class])->group(function () {
         if (Auth::user()->role === 'collaborator') {
             return redirect()->route('admin.sales.index');
         }
-        return view('dashboard');
+
+        $commerceId = Auth::user()->commerce_id;
+
+        $cashRegisters = CashRegister::where('commerce_id', $commerceId)
+            ->where('status', 'closed')
+            ->latest()
+            ->paginate();
+
+        return view('dashboard', compact('cashRegisters'));
     })->name('dashboard');
 
     // -------------------------------------------------------------

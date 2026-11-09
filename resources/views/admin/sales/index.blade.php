@@ -30,19 +30,62 @@
                                     {{ $sale->total }} Bs. <span
                                         class="ml-2 text-green-600">{{ $sale->created_at }}</span>
                                 </span>
-                                @foreach ($sale->products as $product)
-                                    <h3
-                                        class="mb-0.5 mt-2 text-lg font-semibold text-primary-800 dark:text-primary-300">
-                                        {{ $product->description }}
-                                    </h3>
-                                @endforeach
-                                <p class="text-base font-normal text-primary-700 dark:text-primary-300">
-                                    Please pack the product
-                                    and accessories received in the original packaging. The courier will contact you to
-                                    pick
-                                    up
-                                    the package from the specified address.
-                                </p>
+                                {{-- @foreach ($sale->products as $product) --}}
+                                    <flux:table bleed container:class="mt-6">
+                                        <flux:table.columns>
+                                            <flux:table.column>#</flux:table.column>
+                                            <flux:table.column>Descripcion</flux:table.column>
+                                            <flux:table.column>Categoria</flux:table.column>
+                                            <flux:table.column>Stock</flux:table.column>
+                                            <flux:table.column>Precio Venta</flux:table.column>
+                                            <flux:table.column>Acciones</flux:table.column>
+                                        </flux:table.columns>
+
+                                        <flux:table.rows>
+                                            @foreach ($sale->products as $product)
+                                                <flux:table.row :key="$product->id">
+                                                    <flux:table.cell variant="strong">
+                                                        {{ $products->firstItem() + $loop->index }}
+                                                    </flux:table.cell>
+
+                                                    <flux:table.cell>
+                                                        {{ $product->description }}
+                                                    </flux:table.cell>
+
+                                                    <flux:table.cell>
+                                                        {{ $product->category->name }}
+                                                    </flux:table.cell>
+
+                                                    <flux:table.cell>
+                                                        {{ $product->stock }}
+                                                    </flux:table.cell>
+
+                                                    <flux:table.cell>
+                                                        {{ $product->price }}
+                                                    </flux:table.cell>
+
+                                                    <flux:table.cell>
+                                                        <flux:button.group>
+                                                            <flux:button
+                                                                href="{{ route('admin.products.edit', $product) }}"
+                                                                icon="pencil-square" class="!bg-amber-500 !text-white">
+                                                            </flux:button>
+                                                            <form
+                                                                action="{{ route('admin.products.destroy', $product) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <flux:button type="submit" icon="archive-box-x-mark"
+                                                                    class="!bg-red-500 !text-white"></flux:button>
+                                                            </form>
+                                                        </flux:button.group>
+                                                    </flux:table.cell>
+                                                </flux:table.row>
+                                            @endforeach
+                                        </flux:table.rows>
+                                    </flux:table>
+                                {{-- @endforeach --}}
                             </li>
                         @empty
                             <p class="text-gray-500 text-center py-4">
@@ -51,12 +94,12 @@
                         @endforelse
                     </ol>
 
-                    <div class="sm:flex items-center sm:space-x-4 space-y-4 sm:space-y-0">
+                    {{-- <div class="sm:flex items-center sm:space-x-4 space-y-4 sm:space-y-0">
                         <a href="#" title=""
                             class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
                             role="button">
-                            <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
                             </svg>
@@ -71,7 +114,7 @@
                             </svg>
                             Cancel the refund
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section>

@@ -1,6 +1,6 @@
 <x-layouts::auth :title="__('Register')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+        <x-auth-header :title="__('Crear una cuenta')" :description="__('Ingresa tus datos para crear tu cuenta')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -30,10 +30,10 @@
             <div id="step-1" class="flex flex-col gap-6">
                 <div>
                     <label for="email" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                        {{ __('Email address') }}
+                        {{ __('Email') }}
                     </label>
                     <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
-                        placeholder="email@example.com"
+                        placeholder="email@gmail.com"
                         class="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white" />
                     @error('email')
                         <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
@@ -42,7 +42,7 @@
 
                 <button type="button" id="btn-next"
                     class="w-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 py-2 px-4 rounded-md font-medium text-sm hover:opacity-90 transition">
-                    {{ __('Next') }}
+                    {{ __('Siguiente') }}
                 </button>
             </div>
 
@@ -155,8 +155,8 @@
         </form> --}}
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            <span>{{ __('Si ya tienes una cuenta') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('Inicia sesión') }}</flux:link>
         </div>
     </div>
 

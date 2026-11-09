@@ -8,12 +8,12 @@
     $navItems = [
         [
             'icon' => 'home',
-            'label' => __('Dashboard'),
+            'label' => __('Home'),
             'route' => route('admin.dashboard'),
             'active' => request()->routeIs('admin.dashboard'),
         ],
         [
-            'icon' => 'book-open',
+            'icon' => 'users',
             'label' => __('Usuarios'),
             'route' => route('admin.users.index'),
             'active' => request()->routeIs('admin.users.*'),
@@ -31,19 +31,19 @@
             'active' => request()->routeIs('admin.products.*'),
         ],
         [
-            'icon' => 'envelope-open',
+            'icon' => 'shopping-cart',
             'label' => __('Compras'),
             'route' => route('admin.purchases.index'),
             'active' => request()->routeIs('admin.purchases.*'),
         ],
         [
-            'icon' => 'paper-airplane',
+            'icon' => 'currency-dollar',
             'label' => __('Ventas'),
             'route' => route('admin.sales.index'),
             'active' => request()->routeIs('admin.sales.*'),
         ],
         [
-            'icon' => 'paper-airplane',
+            'icon' => 'credit-card',
             'label' => __('Registro de caja'),
             'route' => route('admin.cash.index'),
             'active' => request()->routeIs('admin.cash.*'),
@@ -61,7 +61,7 @@
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
-            <flux:sidebar.group :heading="__('Platform')" class="grid">
+            <flux:sidebar.group :heading="__('Plataforma')" class="grid">
                 @foreach ($navItems as $item)
                     <flux:sidebar.item icon="{{ $item['icon'] }}" :href="$item['route']" :current="$item['active']"
                         {{-- wire:navigate --}}
@@ -74,7 +74,7 @@
 
         <flux:spacer />
 
-        <flux:sidebar.nav>
+        {{-- <flux:sidebar.nav>
             <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
                 target="_blank">
                 {{ __('Repository') }}
@@ -84,7 +84,7 @@
                 target="_blank">
                 {{ __('Documentation') }}
             </flux:sidebar.item>
-        </flux:sidebar.nav>
+        </flux:sidebar.nav> --}}
 
         <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
     </flux:sidebar>
@@ -116,7 +116,7 @@
 
                 <flux:menu.radio.group>
                     <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                        {{ __('Settings') }}
+                        {{ __('Configuración') }}
                     </flux:menu.item>
                 </flux:menu.radio.group>
 
@@ -126,7 +126,7 @@
                     @csrf
                     <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
                         class="w-full cursor-pointer" data-test="logout-button">
-                        {{ __('Log out') }}
+                        {{ __('Cerrar sesión') }}
                     </flux:menu.item>
                 </form>
             </flux:menu>

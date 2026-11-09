@@ -10,7 +10,10 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Socialite;
 
 
-Route::view('/', 'home')->name('home');
+// Route::view('/', 'home')->name('home');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');

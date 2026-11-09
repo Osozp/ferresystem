@@ -7,7 +7,6 @@ use App\Models\Sale;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +15,18 @@ class SaleController extends Controller
     public function index()
     {
         $products = Product::paginate(10);
-        $sales = Sale::with('products')->latest()->get();
+
+        $activeRegister = CashRegister::where('user_id', Auth::id())
+            ->where('status','open')
+            ->first();
+
+        $sales = $activeRegister
+            ?Sale::with('products')
+            ->where('cash_register_id', $activeRegister->id)
+            ->latest()
+            ->get()
+            : collect();
+            
         return view('admin.sales.index', compact('products', 'sales'));
     }
 
