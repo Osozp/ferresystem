@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth', EnsureCommerceIsActive::class])->group(function () {
     Route::get('/', function () {
-        if (Auth::user()->role === 'collaborator') {
+        $user = Auth::user();
+        if ($user->role === 'collaborator') {
             return redirect()->route('admin.sales.index');
         }
 
-        $commerceId = Auth::user()->commerce_id;
+        $commerceId = $user->commerce_id;
 
         $cashRegisters = CashRegister::where('commerce_id', $commerceId)
             ->where('status', 'closed')

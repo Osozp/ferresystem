@@ -5,7 +5,7 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
-        <x-passkey-verify />
+        {{-- <x-passkey-verify /> --}}
 
         <a href="{{ route('auth.google') }}"
             class="w-full flex items-center justify-center gap-3 border border-gray-300 bg-white text-gray-700 font-medium py-2.5 px-4 rounded-lg hover:bg-gray-50 transition shadow-sm mb-6">
