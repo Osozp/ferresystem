@@ -11,7 +11,7 @@
             </flux:button>
         </div>
 
-        <flux:table bleed container:class="mt-6" id="compras">
+        {{-- <flux:table bleed container:class="mt-6" id="compras">
             <flux:table.columns>
                 <flux:table.column>#</flux:table.column>
                 <flux:table.column>Fecha de compra</flux:table.column>
@@ -66,23 +66,11 @@
 
 
 
-                        {{-- <flux:table.cell>
-                            <flux:button.group>
-                                <flux:button href="{{ route('admin.products.edit', $product) }}" icon="pencil-square"
-                                    class="!bg-amber-500 !text-white"></flux:button>
-                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST"
-                                    onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <flux:button type="submit" icon="archive-box-x-mark"
-                                        class="!bg-red-500 !text-white"></flux:button>
-                                </form>
-                            </flux:button.group>
-                        </flux:table.cell> --}}
+
                     </flux:table.row>
                 @endforeach
             </flux:table.rows>
-        </flux:table>
+        </flux:table> --}}
     </flux:card>
 
     <!-- MODAL DE DETALLE DE COMPRA -->

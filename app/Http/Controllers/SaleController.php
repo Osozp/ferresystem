@@ -30,9 +30,22 @@ class SaleController extends Controller
         return view('admin.sales.index', compact('products', 'sales'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $products = Product::paginate(10);
+         $search = $request->input('search');
+
+        $products = Product::when($search, function ($query, $search) {
+                return $query->where('description', 'like', "%{$search}%")
+                             ->orWhere('codigo', 'like', "%{$search}%");
+            })
+            ->paginate(10)
+            ->withQueryString(); // ¡Vital para que el paginador recuerde lo que buscaste!
+
+        // Si la petición viene por AJAX desde el buscador o paginador
+        if ($request->ajax()) {
+            return view('admin.sales.partials.products-table', compact('products'));
+        }
+
         return view('admin.sales.create', compact('products'));
     }
 

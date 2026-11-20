@@ -67,23 +67,23 @@
             </flux:card>
         </div>
         <div class="rounded-lg">
-            <flux:card>
+            <div class="rounded-lg" id="products-container">
+                @include('admin.purchases.partials.products-table', ['products' => $products])
+            </div>
+            {{-- <flux:card>
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <flux:heading>Lista de productos</flux:heading>
-                        {{-- <flux:text class="mt-1">Your latest customer activity.</flux:text> --}}
+
                     </div>
 
-                    {{-- <flux:button href="{{ route('admin.products.create') }}" variant="primary" size="sm"
-                        icon="plus">Crear
-                        Producto
-                    </flux:button> --}}
+
                 </div>
 
                 <flux:table bleed container:class="mt-6">
                     <flux:table.columns>
                         <flux:table.column>#</flux:table.column>
-                        {{-- <flux:table.column>Codigo</flux:table.column> --}}
+
                         <flux:table.column>Descripcion</flux:table.column>
                         <flux:table.column>Precio</flux:table.column>
                         <flux:table.column>Stock</flux:table.column>
@@ -97,9 +97,7 @@
                                     {{ $product->id }}
                                 </flux:table.cell>
 
-                                {{-- <flux:table.cell>
-                                    {{ $product->codigo }}
-                                </flux:table.cell> --}}
+
 
                                 <flux:table.cell>
                                     {{ $product->description }}
@@ -125,7 +123,7 @@
                 <div class="mt-4 text-white">
                     {{ $products->links() }}
                 </div>
-            </flux:card>
+            </flux:card> --}}
         </div>
     </section>
 

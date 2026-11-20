@@ -552,5 +552,90 @@ function initComprasModal() {
     }
 }
 
+// ==========================================
+// BUSCADOR Y PAGINACIÓN AJAX PARA PRODUCTOS
+// ==========================================
+let searchTimeout;
 
+document.addEventListener("input", (e) => {
+    if (e.target && e.target.id === "product-search-input") {
+        clearTimeout(searchTimeout);
+        const query = e.target.value;
 
+        // Espera 300ms después de que dejes de escribir para hacer la petición
+        searchTimeout = setTimeout(() => {
+            fetchProducts(`?search=${encodeURIComponent(query)}`);
+        }, 300);
+    }
+});
+
+// Manejar los clics en los enlaces de paginación de la tabla de la derecha
+document.addEventListener("click", (e) => {
+    const paginationLink = e.target.closest("#products-pagination-container a");
+    if (paginationLink) {
+        e.preventDefault();
+        const url = paginationLink.getAttribute("href");
+        if (url) {
+            const urlObj = new URL(url, window.location.origin);
+            fetchProducts(urlObj.search);
+        }
+    }
+});
+
+async function fetchProducts(queryString) {
+    try {
+        const response = await fetch(
+            `${window.location.pathname}${queryString}`,
+            {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    Accept: "text/html",
+                },
+            },
+        );
+
+        if (!response.ok) throw new Error("Error al cargar los productos");
+
+        const html = await response.text();
+        const productsContainer = document.getElementById("products-container");
+
+        if (productsContainer) {
+            productsContainer.innerHTML = html;
+
+            // Mantener el foco y el cursor al final del texto en el buscador
+            const searchInput = document.getElementById("product-search-input");
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.setSelectionRange(
+                    searchInput.value.length,
+                    searchInput.value.length,
+                );
+            }
+
+            // Mantener deshabilitados los botones de productos que ya agregaste a la izquierda
+            syncAddedButtons();
+        }
+    } catch (error) {
+        console.error("Error en búsqueda AJAX:", error);
+    }
+}
+
+function syncAddedButtons() {
+    purchaseItems.forEach((item) => {
+        const button = document.querySelector(
+            `[data-action="btn-add-product"][data-id="${item.id}"]`,
+        );
+        if (button) {
+            button.disabled = true;
+            button.classList.add(
+                "opacity-50",
+                "cursor-not-allowed",
+                "border",
+                "border-gray-300",
+                "!bg-transparent",
+                "text-gray-400",
+            );
+            button.textContent = "Agregado";
+        }
+    });
+}

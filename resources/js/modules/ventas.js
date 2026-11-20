@@ -1,3 +1,4 @@
+
 let saleItems = [];
 
 const detailsContainer = document.getElementById("sales-details-container");
@@ -10,7 +11,7 @@ const totalInput = document.getElementById("total-input");
 
 // Escuchar clic en los botones "Agregar" (Tabla de productos)
 document.addEventListener("click", (e) => {
-    const button = e.target?.closest(".btn-add-product");
+    const button = e.target?.closest('[data-action="btn-add-product"]');
 
     if (button && !button.disabled) {
         const id = button.dataset.id;
@@ -18,6 +19,13 @@ document.addEventListener("click", (e) => {
         const description = button.dataset.description;
         const stock = Number.parseInt(button.dataset.stock, 10) || 0;
         const price = Number.parseFloat(button.dataset.price) || 0;
+
+        if (stock <= 0) {
+            if (typeof window.showToast === "function") {
+                window.showToast("error", "Este producto no tiene stock disponible.");
+            }
+            return;
+        }
 
         // Deshabilitar botón visualmente
         button.disabled = true;
@@ -27,6 +35,8 @@ document.addEventListener("click", (e) => {
         addItem(id, code, description, stock, price);
     }
 });
+
+
 
 // Agregar producto al array de estado
 function addItem(id, code, description, stock, price) {
@@ -308,10 +318,10 @@ function updateTotalsDisplay(grandTotal) {
 // 4. ANULACIÓN DE COMPRAS (HISTORIAL)
 // ==========================================
 document.addEventListener("click", async (e) => {
-    const btnCancel = e.target?.closest(".btn-cancel-purchase");
+    const btnCancel = e.target?.closest(".btn-cancel-sale");
     if (!btnCancel) return;
 
-    const purchaseId = btnCancel.dataset.id;
+    const saleId = btnCancel.dataset.id;
 
     const result = await Swal.fire({
         title: "¿Estás seguro de anular esta compra?",
@@ -330,7 +340,7 @@ document.addEventListener("click", async (e) => {
                 .querySelector('meta[name="csrf-token"]')
                 ?.getAttribute("content");
 
-            const response = await fetch(`/admin/purchases/${purchaseId}`, {
+            const response = await fetch(`/admin/sales/${saleId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -395,36 +405,36 @@ window.showToast = (icon, title) => {
 };
 
 // Lógica para el Modal de Detalle de Compra
-const modal = document.getElementById("purchase-detail-modal");
+const modal = document.getElementById("sale-detail-modal");
 const closeModalBtn = document.getElementById("close-modal-btn");
 
 if (modal) {
     // Abrir modal y consultar API
     document.addEventListener("click", async (e) => {
-        const btn = e.target?.closest(".btn-show-purchase");
+        const btn = e.target?.closest(".btn-show-sale");
         if (!btn) return;
 
-        const purchaseId = btn.dataset.id;
+        const saleId = btn.dataset.id;
 
         try {
-            const response = await fetch(`/admin/purchases/${purchaseId}`);
+            const response = await fetch(`/admin/sales/${saleId}`);
             if (!response.ok) throw new Error("Error al obtener el detalle");
 
-            const purchase = await response.json();
+            const sale = await response.json();
 
             // Llenar información general del modal
-            document.getElementById("modal-purchase-id").textContent =
-                purchase.id;
-            document.getElementById("modal-purchase-date").textContent =
-                new Date(purchase.purchase_date).toLocaleDateString();
-            document.getElementById("modal-purchase-total").textContent =
-                Number.parseFloat(purchase.total).toFixed(2);
+            document.getElementById("modal-sale-id").textContent =
+                sale.id;
+            document.getElementById("modal-sale-date").textContent =
+                new Date(sale.sale_date).toLocaleDateString();
+            document.getElementById("modal-sale-total").textContent =
+                Number.parseFloat(sale.total).toFixed(2);
 
             // Renderizar la tabla de productos dentro del modal
             const itemsBody = document.getElementById("modal-items-body");
             itemsBody.innerHTML = "";
 
-            purchase.products.forEach((product) => {
+            sale.products.forEach((product) => {
                 const quantity = product.pivot.quantity;
                 const price = Number.parseFloat(product.pivot.price);
                 const subtotal = (quantity * price).toFixed(2);
@@ -462,5 +472,93 @@ if (modal) {
 
     modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.classList.add("hidden");
+    });
+}
+
+// ==========================================
+// BUSCADOR Y PAGINACIÓN AJAX PARA PRODUCTOS
+// ==========================================
+let searchTimeout;
+
+document.addEventListener("input", (e) => {
+    if (e.target && e.target.id === "product-search-input") {
+        clearTimeout(searchTimeout);
+        const query = e.target.value;
+
+        // Espera 300ms después de que dejes de escribir para hacer la petición
+        searchTimeout = setTimeout(() => {
+            fetchProducts(`?search=${encodeURIComponent(query)}`);
+        }, 300);
+    }
+});
+
+// Manejar los clics en los enlaces de paginación de la tabla de la derecha
+document.addEventListener("click", (e) => {
+    const paginationLink = e.target.closest("#products-pagination-container a");
+    if (paginationLink) {
+        e.preventDefault();
+        const url = paginationLink.getAttribute("href");
+        if (url) {
+            const urlObj = new URL(url, window.location.origin);
+            fetchProducts(urlObj.search);
+        }
+    }
+});
+
+async function fetchProducts(queryString) {
+    try {
+        const response = await fetch(
+            `${window.location.pathname}${queryString}`,
+            {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    Accept: "text/html",
+                },
+            },
+        );
+
+        if (!response.ok) throw new Error("Error al cargar los productos");
+
+        const html = await response.text();
+        const productsContainer = document.getElementById("products-container");
+
+        if (productsContainer) {
+            productsContainer.innerHTML = html;
+
+            // Mantener el foco y el cursor al final del texto en el buscador
+            const searchInput = document.getElementById("product-search-input");
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.setSelectionRange(
+                    searchInput.value.length,
+                    searchInput.value.length,
+                );
+            }
+
+            // Mantener deshabilitados los botones de productos que ya agregaste a la izquierda
+            syncAddedButtons();
+        }
+    } catch (error) {
+        console.error("Error en búsqueda AJAX:", error);
+    }
+}
+
+function syncAddedButtons() {
+    saleItems.forEach((item) => {
+        const button = document.querySelector(
+            `[data-action="btn-add-product"][data-id="${item.id}"]`,
+        );
+        if (button) {
+            button.disabled = true;
+            button.classList.add(
+                "opacity-50",
+                "cursor-not-allowed",
+                "border",
+                "border-gray-300",
+                "!bg-transparent",
+                "text-gray-400",
+            );
+            button.textContent = "Agregado";
+        }
     });
 }

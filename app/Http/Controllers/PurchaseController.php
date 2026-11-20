@@ -15,23 +15,62 @@ class PurchaseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     // Listado de productos para la sección superior/derecha
+    //     $products = Product::paginate(10);
+
+    //     // Listado de compras realizadas para la sección inferior
+    //     $purchases = Purchase::with('products')->latest()->paginate(10);
+
+    //     return view('admin.purchases.index', compact('products', 'purchases'));
+    // }
+
+    public function index(Request $request)
     {
-        // Listado de productos para la sección superior/derecha
-        $products = Product::paginate(10);
+        $search = $request->input('search');
 
-        // Listado de compras realizadas para la sección inferior
-        $purchases = Purchase::with('products')->latest()->paginate(10);
+        // Consultamos los productos con su respectivo buscador y paginación
+        $products = Product::when($search, function ($query, $search) {
+            return $query->where('description', 'like', "%{$search}%")
+                ->orWhere('codigo', 'like', "%{$search}%");
+        })
+            ->paginate(5); // o los que estés mostrando por página
 
-        return view('admin.purchases.index', compact('products', 'purchases'));
+        // Si la petición viene por AJAX, devolvemos solo el fragmento de la tabla
+        if ($request->ajax()) {
+            return view('admin.purchases.partials.products-table', compact('products'));
+        }
+
+        return view('admin.purchases.index', compact('products'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    // public function create()
+    // {
+    //     $products = Product::paginate(10);
+    //     return view('admin.purchases.create', compact('products'));
+    // }
+
+    public function create(Request $request)
     {
-        $products = Product::paginate(10);
+        $search = $request->input('search');
+
+        $products = Product::when($search, function ($query, $search) {
+                return $query->where('description', 'like', "%{$search}%")
+                             ->orWhere('codigo', 'like', "%{$search}%");
+            })
+            ->paginate(10)
+            ->withQueryString(); // ¡Vital para que el paginador recuerde lo que buscaste!
+
+        // Si la petición viene por AJAX desde el buscador o paginador
+        if ($request->ajax()) {
+            return view('admin.purchases.partials.products-table', compact('products'));
+        }
+
         return view('admin.purchases.create', compact('products'));
     }
 
@@ -55,9 +94,9 @@ class PurchaseController extends Controller
             // 2. Transacción
             DB::transaction(function () use ($request) {
 
-            $activeRegister = CashRegister::where('user_id', Auth::id())
-                ->where('status','open')
-                ->first();
+                $activeRegister = CashRegister::where('user_id', Auth::id())
+                    ->where('status', 'open')
+                    ->first();
 
                 // Paso A: Crear cabecera
                 $purchase = Purchase::create([
