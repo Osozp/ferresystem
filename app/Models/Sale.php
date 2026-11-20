@@ -18,6 +18,7 @@ class Sale extends Model
         'cash_register_id',
         'customer_id',
         'total',
+        'status',
         'sale_date',
     ];
 

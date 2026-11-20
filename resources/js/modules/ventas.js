@@ -1,4 +1,3 @@
-
 let saleItems = [];
 
 const detailsContainer = document.getElementById("sales-details-container");
@@ -324,13 +323,13 @@ document.addEventListener("click", async (e) => {
     const saleId = btnCancel.dataset.id;
 
     const result = await Swal.fire({
-        title: "¿Estás seguro de anular esta compra?",
+        title: "¿Estás seguro de anular esta venta?",
         text: "Esta acción cambiará el estado a anulada y revertirá el stock ingresado.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#ef4444",
         cancelButtonColor: "#6b7280",
-        confirmButtonText: "Sí, anular compra",
+        confirmButtonText: "Sí, anular venta",
         cancelButtonText: "Cancelar",
     });
 
@@ -457,7 +456,7 @@ if (modal) {
             if (typeof window.showToast === "function") {
                 window.showToast(
                     "error",
-                    "No se pudo cargar el detalle de la compra.",
+                    "No se pudo cargar el detalle de la venta.",
                 );
             }
         }

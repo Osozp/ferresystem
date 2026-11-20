@@ -73,6 +73,7 @@ class SaleController extends Controller
                     'cash_register_id' => $activeRegister?->id,
                     'total'     => $request->total,
                     'sale_date' => $request->sale_date ?? now(),
+                    'status'    => 'completed',
                 ]);
 
                 $attachData = [];
@@ -107,14 +108,78 @@ class SaleController extends Controller
             });
 
             return redirect()->route('admin.sales.index')
-                ->with('success', '¡La compra ha sido registrada con éxito!');
+                ->with('success', '¡La venta ha sido registrada con éxito!');
         } catch (Exception $e) {
             // Guardar el error detallado en el log de Laravel
             //Log::error('Error al registrar venta: ' , $e->getMessage());
 
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Ocurrió un error al guardar la compra: ' . $e->getMessage());
+                ->with('error', 'Ocurrió un error al guardar la venta: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Mostrar detalle de la venta en el modal (JSON)
+     */
+    public function show(Sale $sale)
+    {
+        $sale->load('products');
+
+        return response()->json($sale);
+    }
+
+    /**
+     * Anular venta mediante petición PUT
+     */
+    public function update(Request $request, Sale $sale)
+    {
+        return $this->cancelSale($sale);
+    }
+
+    /**
+     * Anular venta mediante petición DELETE (destroy)
+     */
+    public function destroy(Sale $sale)
+    {
+        return $this->cancelSale($sale);
+    }
+
+    /**
+     * Lógica centralizada para anular la venta y devolver el stock
+     */
+    private function cancelSale(Sale $sale)
+    {
+        if ($sale->status === 'canceled') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta venta ya fue anulada previamente.'
+            ], 400);
+        }
+
+        try {
+            DB::transaction(function () use ($sale) {
+                // 1. Devolver el stock de cada producto vendido (INCREMENT)
+                foreach ($sale->products as $product) {
+                    Product::where('id', $product->id)
+                        ->increment('stock', $product->pivot->quantity);
+                }
+
+                // 2. Cambiar el estado de la venta a anulada
+                $sale->update([
+                    'status' => 'canceled'
+                ]);
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Venta anulada y stock devuelto correctamente.'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrió un error al intentar anular la venta: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
