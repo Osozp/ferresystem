@@ -52,7 +52,7 @@
     "src": "_instrument-sans-600-normal-DMks36a2.woff"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CWhEdVI8.css",
+    "file": "assets/app-TTJI-M1C.css",
     "name": "app",
     "names": [
       "app.css"
@@ -73,7 +73,7 @@
     ]
   },
   "resources/js/modules/compras.js": {
-    "file": "assets/compras-CrXTop9c.js",
+    "file": "assets/compras-wFHVlrUh.js",
     "name": "compras",
     "src": "resources/js/modules/compras.js",
     "isEntry": true
@@ -85,7 +85,7 @@
     "isDynamicEntry": true
   },
   "resources/js/modules/ventas.js": {
-    "file": "assets/ventas-DkPoj82o.js",
+    "file": "assets/ventas-BX7O5MJe.js",
     "name": "ventas",
     "src": "resources/js/modules/ventas.js",
     "isEntry": true

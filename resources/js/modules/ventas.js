@@ -119,7 +119,7 @@ function renderDetails() {
     if (!detailsContainer) return;
 
     detailsContainer.innerHTML = "";
-    let grandTotal = 0;
+    let grandTotal = 0;ººººº
 
     saleItems.forEach((item, index) => {
         const itemTotal = item.quantity * item.price;
