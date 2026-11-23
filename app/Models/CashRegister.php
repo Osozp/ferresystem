@@ -40,4 +40,14 @@ class CashRegister extends Model
     {
         return $this->hasMany(Purchase::class);
     }
+
+    public function validSales(): HasMany
+    {
+        return $this->hasMany(Sale::class)->where('status', '!=', 'canceled');
+    }
+
+    public function validPurchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class)->where('status', '!=', 'canceled');
+    }
 }

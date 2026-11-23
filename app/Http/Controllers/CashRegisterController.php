@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\CashRegister;
@@ -64,8 +65,8 @@ class CashRegisterController extends Controller
         }
 
         // Calcular totales del turno
-        $totalSales = $cashRegister->sales()->sum('total');
-        $totalPurchases = $cashRegister->purchases()->sum('total'); // Sumar el total de compras del turno
+        $totalSales = $cashRegister->validSales()->sum('total');
+        $totalPurchases = $cashRegister->validPurchases()->sum('total'); // Sumar el total de compras del turno
 
         // Monto esperado en caja = Inicio + Ventas - Compras
         $expectedBalance = $cashRegister->opening_balance + $totalSales - $totalPurchases;
