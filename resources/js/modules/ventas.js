@@ -94,7 +94,7 @@ if (detailsContainer) {
 
             // Reactivar el botón de agregar en la tabla de productos
             const originalButton = document.querySelector(
-                `.btn-add-product[data-id="${productId}"]`,
+               `[data-action="btn-add-product"][data-id="${productId}"]`,
             );
             if (originalButton) {
                 originalButton.disabled = false;
@@ -119,7 +119,7 @@ function renderDetails() {
     if (!detailsContainer) return;
 
     detailsContainer.innerHTML = "";
-    let grandTotal = 0;ººººº
+    let grandTotal = 0;
 
     saleItems.forEach((item, index) => {
         const itemTotal = item.quantity * item.price;
